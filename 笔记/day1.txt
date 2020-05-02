@@ -1,0 +1,30 @@
+配置文件
+	manifest.json	配置文件：appid、logo
+	
+	pages.json		配置文件：导航、tabler、路由
+	
+	main.js			vue 初始化入口文件
+	
+	App.vue			全局配置：样式，全局监听
+	
+	static			静态资源：图片、字体图标
+	
+	pages				页面
+		index
+			index.vue
+		list
+			list.vue
+		my
+			my.vue
+			
+	components			组件
+		
+		index
+			Banner.vue
+			Icons.vue
+		list
+			XXX.vue
+		common		公共组件
+			commodity.vue
+			
+		common		公共文件：全局的 css 文件
