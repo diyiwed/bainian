@@ -28,3 +28,23 @@
 			commodity.vue
 			
 		common		公共文件：全局的 css 文件
+		
+		
+**************后端**************
+
+一、搭建后端
+	1、全局命令
+		npm install express-generator -g
+		
+	2、进入项目目录
+		express --view=ejs server
+	
+	3、根据提示执行命令
+	
+二、前端请求后端接口【本地测试】
+	1、手机和电脑是一个wifi
+	2、不可以使用localhost，必须要使用ip地址
+	
+	**查ip地址
+		mac： ifconfig
+		window：ipconfig
