@@ -1,0 +1,1 @@
+<view><commodity vue-id="5eca5ce4-1" dataList="{{commodityList}}" bind:__l="__l"></commodity></view>

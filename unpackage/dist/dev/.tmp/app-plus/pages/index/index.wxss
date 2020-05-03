@@ -1,0 +1,17 @@
+
+.scroll-content.data-v-27ec0ba2 {
+	width: 100%;
+	height: 80rpx;
+	/* 规定段落不进行换行 */
+	white-space: nowrap;
+}
+.scroll-item.data-v-27ec0ba2 {
+	display: inline-block;
+	padding: 10rpx 30rpx;
+	font-size: 32rpx;
+}
+.f-active-color.data-v-27ec0ba2 {
+	padding: 10rpx 0;
+	border-bottom: 6rpx solid #49BDFB;
+}
+
