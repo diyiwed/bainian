@@ -14,8 +14,12 @@
 			index.vue
 		list
 			list.vue
+		shopcart
+			shopcart.vue
 		my
 			my.vue
+		search
+			search.vue
 			
 	components			组件
 		

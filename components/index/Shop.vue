@@ -1,12 +1,12 @@
 <template>
 	<view class="shop">
-		<view class="shop-item">
+		<view class="shop-item" v-for="(item, index) in dataList" :key="index">
 			<view class="shop-big">
-				<image class="shop-big" src="../../static/img/shop.jpg" mode=""></image>
+				<image class="shop-big" :src="item.bigUrl" mode=""></image>
 			</view>
 			<scroll-view class="scroll-content" scroll-x="true" >
 				<Commodity 
-				:dataList='ShopList'
+				:dataList='item.data'
 				wrap='no-wrap'
 				itemW='200rpx'
 				bigH='200rpx'
@@ -20,43 +20,8 @@
 <script>
 	import Commodity from '../common/Commodity.vue'
 	export default {
-		data() {
-			return {
-				ShopList: [
-					{
-						id:1,
-						imgUrl: '../../static/img/shop1.jpg',
-						name:'大衣绒毛大款2020年必须买，不买你就后悔了，爆款折扣GG008',
-						pprice: '248',
-						oprice: '998',
-						discount: '4.5'
-					},
-					{
-						id:2,
-						imgUrl: '../../static/img/shop2.jpg',
-						name:'大衣绒毛大款2020年必须买，不买你就后悔了，爆款折扣GG008',
-						pprice: '248',
-						oprice: '998',
-						discount: '4.5'
-					},
-					{
-						id:3,
-						imgUrl: '../../static/img/shop3.jpg',
-						name:'大衣绒毛大款2020年必须买，不买你就后悔了，爆款折扣GG008',
-						pprice: '248',
-						oprice: '998',
-						discount: '4.5'
-					},
-					{
-						id:4,
-						imgUrl: '../../static/img/shop4.jpg',
-						name:'大衣绒毛大款2020年必须买，不买你就后悔了，爆款折扣GG008',
-						pprice: '248',
-						oprice: '998',
-						discount: '4.5'
-					}
-				]
-			}
+		props: {
+			dataList: Array
 		},
 		components: {
 			Commodity

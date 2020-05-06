@@ -11,7 +11,7 @@
 				<text :class="topBarIndex===index?'f-active-color':'f-color'">{{item.name}}</text>
 			</view>
 		</scroll-view>
-		
+	
 		<swiper 
 		@change="onChangeTab" 
 		:current="topBarIndex"
@@ -21,21 +21,45 @@
 			v-for="(item, index) in newTopBar"
 			:key="index"
 			>
-				<scroll-view scroll-y="true" :style="'height:'+clentHeight+'px;'">
+				<scroll-view scroll-y="true" :style="'height:'+clentHeight+'px;'" @scrolltolower="loadMore(index)">
 					<block v-if="item.data.length > 0">
 						<block
 						v-for="(k, i) in item.data"
 						:key="i">
+						<!-- 推荐 -->
 							<IndexSwiper v-if="k.type === 'swiperList'" :dataList='k.data'></IndexSwiper>
 							<template v-if="k.type === 'recommendList'">
 								<Recommend :dataList='k.data'></Recommend>
 								<Card cardTitle='猜你喜欢'></Card>
 							</template>
+							
+							<!-- 运动户外... -->
+							<Banner v-if="k.type==='bannerList'" :dataList='k.imgUrl'></Banner>
+							
+							<template v-if="k.type==='iconsList'">
+								<Icon :dataList="k.data"></Icon>
+								<Card cardTitle='运动户外'></Card>
+							</template>
+							
+							<template v-if="k.type==='hotList'">
+								<Hot :dataList="k.data"></Hot>
+								<Card cardTitle='推荐店铺'></Card>
+							</template>
+							
+							<template v-if="k.type==='shopList'">
+								<Shop :dataList="k.data"></Shop>
+								<Card cardTitle='为您推荐'></Card>
+							</template>
+							
 							<CommodityList v-if="k.type === 'commodityList'" :dataList='k.data'></CommodityList>
+							
 						</block>
 					</block>
 					<view v-else>
 						暂无数据...
+					</view>
+					<view class="load-text f-color">
+						{{item.loadText}}
 					</view>
 				</scroll-view>
 			</swiper-item>
@@ -60,6 +84,7 @@
 </template>
 
 <script>
+	import $http from '@/common/api/request.js'
 	import IndexSwiper from '@/components/index/IndexSwiper.vue'
 	import Recommend from '@/components/index/Recommend.vue'
 	import Card from '@/components/common/Card.vue'
@@ -99,26 +124,47 @@
 			uni.getSystemInfo({
 				success: (res) => {
 					this.clentHeight = res.windowHeight - uni.upx2px(80) - this.getClientHeight();
-					console.log(this.getClientHeight().res)
 				}
 			})
 		},
+		onNavigationBarButtonTap(e) {
+			if(e.float = "left"){
+				uni.navigateTo({
+					url:"../search/search"
+				})
+			}
+		},
 		methods: {
 			__init() {
-				uni.request({
-					url:"http://192.168.0.102:3000/api/index_list/data",
-					success: (res) => {
-						let data = res.data.data;
-						this.topBar = data.topBar;
-						this.newTopBar = this.initData(data);
-					}
+				
+				$http.request({
+					url:"/index_list/data"
+				}).then((res) => {
+					this.topBar = res.topBar;
+					this.newTopBar = this.initData(res);
+				}).catch(() => {
+					uni.showToast({
+						title:'请求失败',
+						icon:'none'
+					})
 				})
+				
+				// uni.request({
+				// 	url:"http://192.168.0.103:3000/api/index_list/data",
+				// 	success: (res) => {
+				// 		let data = res.data.data;
+				// 		this.topBar = data.topBar;
+				// 		this.newTopBar = this.initData(data);
+				// 	}
+				// })
 			},
 			initData(res) {
 				let arr = [];
 				for(let i=0;i<this.topBar.length;i++) {
 					let obj = {
-						data: []
+						data: [],
+						load: "first",
+						loadText: '上拉加载更多...'
 					}
 					// 首次获取数据
 					if(i==0) {
@@ -134,6 +180,11 @@
 				}
 				this.topBarIndex = index
 				this.scrollIntoIndex = 'top'+index
+				
+				// 第一次滑动 =》 赋值first
+				if(this.newTopBar[this.topBarIndex].load === 'first') {
+					this.addData();
+				}
 			},
 			// 对应滑动
 			onChangeTab(e) {
@@ -150,6 +201,51 @@
 				}else {
 					return 0;
 				}
+			},
+			// 对应显示不同数据
+			addData(callback) {
+				let index = this.topBarIndex;
+				let id = this.topBar[index].id;
+				// 请求不同的数据
+				
+				let page = Math.ceil(this.newTopBar[index].data.length / 5) + 1;
+				
+				$http.request({
+					url:'/index_list/'+id+'/data/'+ page +''
+				}).then((res) => {
+					this.newTopBar[index].data = [...this.newTopBar[index].data, ...res]
+				}).catch(() => {
+					uni.showToast({
+						title:'请求失败',
+						icon:'none'
+					})
+				})
+				
+				// uni.request({
+				// 	url:'http://192.168.0.103:3000/api/index_list/'+id+'/data/'+ page +'',
+				// 	success:(res) => {
+				// 		if(res.statusCode != 200) {
+				// 			return;
+				// 		}else {
+				// 			let data = res.data.data;
+				// 			this.newTopBar[index].data = [...this.newTopBar[index].data, ...data]
+				// 		}
+				// 	}
+				// })
+				
+				// 当请求结束后，重新赋值
+				this.newTopBar[index].load = 'last';
+				if(typeof callback === 'function') {
+					callback();
+				}
+			},
+			// 上拉加载跟多更多
+			loadMore(index) {
+				this.newTopBar[index].loadText = '加载中...';
+				// 请求完数据，文字提示信息又换成【上拉加载跟多...】
+				this.addData(() => {
+					this.newTopBar[index].loadText = '上拉加载跟多...';
+				})
 			}
 		}
 	}
@@ -170,5 +266,10 @@
 	.f-active-color {
 		padding: 10rpx 0;
 		border-bottom: 6rpx solid #49BDFB;
+	}
+	.load-text {
+		border-top: 1px solid #636263;
+		line-height: 60rpx;
+		text-align: center;
 	}
 </style>
