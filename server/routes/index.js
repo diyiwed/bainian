@@ -2,9 +2,109 @@ var express = require('express');
 var router = express.Router();
 var connection = require('../db/sql.js')
 
+// 跨域
+router.all('*', function (req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    res.header('Access-Control-Allow-Methods', '*');
+    res.header('Content-Type', 'application/json;charset=utf-8');
+    next();
+  });
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
+});
+
+router.get('/api/goods/id', function(req, res, next) {
+  let id = req.query.id;
+  connection.query("select * from goods_search where id="+ id +"", function (error, results, fields) {
+  	if(error) throw error;
+  	res.send({
+  		code:"0",
+  		data:results
+  	})
+  });
+});
+
+router.get('/api/goods/list', function(req, res, next) {
+  res.json({
+	  code:0,
+	  data:[
+		  {
+			id:1,
+			name:"家具家纺",
+			data:[
+				{
+					name:"家纺",
+					list:[
+						{
+							id:1,
+							name:"毛巾/浴巾",
+							imgUrl:"../../static/img/list1.jpg"
+						},
+						{
+							id:2,
+							name:"枕头",
+							imgUrl:"../../static/img/list1.jpg"
+						}
+					]
+				},
+				{
+					name:"生活用品",
+					list:[
+						{
+							id:1,
+							name:"浴室用品",
+							imgUrl:"../../static/img/list1.jpg"
+						},
+						{
+							id:2,
+							name:"洗晒",
+							imgUrl:"../../static/img/list1.jpg"
+						}
+					]
+				}
+			]
+		  },
+		  {
+			id:2,
+			name:"女装",
+			data:[
+				{
+					name:"裙装",
+					list:[
+						{
+							id:1,
+							name:"半身裙",
+							imgUrl:"../../static/img/list1.jpg"
+						},
+						{
+							id:2,
+							name:"连衣群",
+							imgUrl:"../../static/img/list1.jpg"
+						}
+					]
+				},
+				{
+					name:"上衣",
+					list:[
+						{
+							id:1,
+							name:"T恤",
+							imgUrl:"../../static/img/list1.jpg"
+						},
+						{
+							id:2,
+							name:"衬衫",
+							imgUrl:"../../static/img/list1.jpg"
+						}
+					]
+				}
+			]
+		  }
+	  ]
+  })
 });
 
 router.get("/api/goods/search", function(req, res, next) {

@@ -27,7 +27,20 @@
 		{
 			"path": "pages/list/list",
 			"style": {
-				"navigationBarTitleText": "分类"
+				"navigationBarTitleText": "类别",
+				"app-plus":{
+					"scrollIndicator":"none",
+					"titleNView":{
+						"searchInput": {
+							"placeholder":"请输入",
+							"disabled":true,
+							"align":"left",
+							"autoFocus":"true",
+							"borderRadius":"#F7F7F7",
+							"placeholderColor":"#B3B3B3"
+						}
+					}
+				}
 			}
 		},
 		{
@@ -41,8 +54,8 @@
 			"style": {
 				"navigationBarTitleText": "我的"
 			}
-		}
-	    ,{
+		},
+	    {
             "path" : "pages/search/search",
             "style" : {
 				"navigationBarBackgroundColor": "#FFFFFF",
@@ -92,6 +105,26 @@
 								"text":"筛选",
 								"fontSize":"16px",
 								"width":"60px"
+							}
+						]
+					}
+				}
+			}
+        }
+        ,{
+            "path" : "pages/details/details",
+            "style" : {
+				"navigationBarTitleText": "商品详情",
+				"app-plus":{
+					"scrollIndicator":"none",
+					"titleNView":{
+						"type":"transparent",
+						"buttons":[
+							{
+								"type":"menu"
+							},
+							{
+								"type":"share"
 							}
 						]
 					}

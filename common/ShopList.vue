@@ -1,6 +1,5 @@
 <template>
 	<view class="shoplist">
-		{{keyword}}
 	<view class="shop-title f-color">
 		<view class="shop-item"
 		v-for="(item, index) in shopList.data"
@@ -26,6 +25,7 @@
 </template>
 
 <script>
+	import $http from '@/common/api/request.js'
 	import Lines from '@/common/Lines.vue'
 	import CommodityList from '@/components/common/CommodityList.vue'
 	export default {
@@ -37,53 +37,51 @@
 				shopList:{
 					currentIndex:0,
 					data: [
-						{name:'价格',status:1},
-						{name:'折扣',status:0},
+						{name:'价格',status:1,key:"pprice"},
+						{name:'折扣',status:0,key:"discount"},
 						{name:'品牌',status:0}
 					]
 				},
-				dataList:[
-					{
-						id:1,
-						imgUrl: '../../static/img/commodity1.jpg',
-						name:'大衣绒毛大款2020年必须买，不买你就后悔了，爆款折扣GG008',
-						pprice: '248',
-						oprice: '998',
-						discount: '4.5'
-					},
-					{
-						id:2,
-						imgUrl: '../../static/img/commodity2.jpg',
-						name:'大衣绒毛大款2020年必须买，不买你就后悔了，爆款折扣GG008',
-						pprice: '248',
-						oprice: '998',
-						discount: '4.5'
-					},
-					{
-						id:3,
-						imgUrl: '../../static/img/commodity3.jpg',
-						name:'大衣绒毛大款2020年必须买，不买你就后悔了，爆款折扣GG008',
-						pprice: '248',
-						oprice: '998',
-						discount: '4.5'
-					},
-					{
-						id:4,
-						imgUrl: '../../static/img/commodity4.jpg',
-						name:'大衣绒毛大款2020年必须买，不买你就后悔了，爆款折扣GG008',
-						pprice: '248',
-						oprice: '998',
-						discount: '4.5'
-					}
-				]
+				dataList:[]
+			}
+		},
+		computed:{
+			orderBy(){
+				// 拿到当前对象
+				let obj = this.shopList.data[this.shopList.currentIndex];
+				let val = obj.status === "1"?"asc":"desc";
+				return{
+					[obj.key]:val
+				}
 			}
 		},
 		components:{
 			Lines,
 			CommodityList
 		},
+		mounted() {
+			this.getData();
+		},
 		methods: {
+			// 请求接口数据
+			getData() {
+				$http.request({
+					url:"/goods/search",
+					data:{
+						name:this.keyword,
+						...this.orderBy
+					}
+				}).then((res)=> {
+					this.dataList = res;
+				}).catch(()=> {
+					uni.showToast({
+						title:'请求失败',
+						icon:'none'
+					})
+				})
+			},
 			changTab(index) {
+				this.getData();
 				// 索引值
 				let idx = this.shopList.currentIndex;
 				// 具体哪一个对象
