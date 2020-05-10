@@ -31,7 +31,11 @@
 		common		公共组件
 			commodity.vue
 			
-		common		公共文件：全局的 css 文件
+		common		公共文件：全局的 css 文件 || 全局的js文件
+			api 
+				request.js
+				
+		store vuex
 		
 		
 **************后端**************

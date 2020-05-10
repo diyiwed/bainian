@@ -46,13 +46,19 @@
 		{
 			"path": "pages/shopcart/shopcart",
 			"style": {
-				"navigationBarTitleText": "购物车"
+				"app-plus": {
+					"titleNView":false,
+					"scrollIndicator":"none"
+				}
 			}
 		},
 		{
 			"path": "pages/my/my",
 			"style": {
-				"navigationBarTitleText": "我的"
+				"app-plus": {
+					"titleNView":false,
+					"scrollIndicator":"none"
+				}
 			}
 		},
 	    {
@@ -129,6 +135,20 @@
 						]
 					}
 				}
+			}
+        }
+        ,{
+            "path" : "pages/my-config/my-config",
+            "style" : {
+				"navigationBarBackgroundColor": "#FFFFFF",
+				"navigationBarTitleText": "设置"
+			}
+        }
+        ,{
+            "path" : "pages/my-path-list/my-path-list",
+            "style" : {
+				"navigationBarBackgroundColor": "#FFFFFF",
+				"navigationBarTitleText": "地址管理"
 			}
         }
     ],

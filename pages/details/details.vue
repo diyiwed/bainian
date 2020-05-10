@@ -29,7 +29,7 @@
 		<!-- 底部 -->
 		<view class="details-foot">
 			<view class="iconfont icon-xiaoxi"></view>
-			<view class="iconfont icon-gouwuche"></view>
+			<view class="iconfont icon-gouwuche" @tap="goShopCart"></view>
 			<view class="add-shopcart" @tap="showPop">加入购物车</view>
 			<view class="purchase" @tap="showPop">立即购买</view>
 		</view>
@@ -43,13 +43,17 @@
 			<view class="pop-box" 
 			:animation="animationData">
 				<view>
-					<image class="pop-img" src="../../static/img/Furnishing1.jpg" mode=""></image>
+					<image class="pop-img" :src="goodsContent.imgUrl" mode=""></image>
 				</view>
 				<view class="pop-num">
 					<view>购买数量</view>
-					<UniNumberBox></UniNumberBox>
+					<UniNumberBox 
+					:value="num"
+					:min="1"
+					@change="changeNumber"
+					></UniNumberBox>
 				</view>
-				<view class="pop-sub">
+				<view class="pop-sub" @tap="addCart">
 					确定
 				</view>
 			</view>
@@ -62,12 +66,14 @@
 	import UniNumberBox from '@/components/uni-app/uni-number-box/uni-number-box.vue'
 	import Card from '@/components/common/Card.vue'
 	import CommodityList from '@/components/common/CommodityList.vue'
+	import {mapMutations} from 'vuex'
 	export default {
 		data() {
 			return {
 				isShow:false,
 				goodsContent: {},
 				animationData:{},
+				num:1,
 				swiperList: [
 					{imgUrl: "../../static/img/swiper1.jpg"},
 					{imgUrl: "../../static/img/swiper2.jpg"},
@@ -123,7 +129,32 @@
 				return true;
 			}
 		},
+		onNavigationBarButtonTap(e){
+			if(e.type === 'share'){
+				uni.share({
+					"provider":"weixin",
+					"type":0,
+					"scene":"WXSceneSession",
+					"title":this.goodsContent.name,
+					"href":"http://192.168.0.109:8080/#/pages/details/details?id="+this.goodsContent.id+"",
+					"imageUrl":"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589085613093&di=5896bab28f5dc0fe5c190ec158d3a395&imgtype=0&src=http%3A%2F%2Fzerofc.cn%2Fpublic%2Fuploads%2F20190902%2Fa3f95b9e26ea33de90ede783e226756f.jpg",
+					success: function (res) {
+						uni.showTabBar({
+							title:"分享成功"
+						})
+					},
+					fail: function (err) {
+						console.log("fail:" + JSON.stringify(err));
+					}
+				})
+			}
+		},
 		methods: {
+			...mapMutations(['addShopCart']),
+			// 改变商品数量
+			changeNumber(value){
+				this.num = value;
+			},
 			showPop() {
 				var animation = uni.createAnimation({
 				  duration: 500
@@ -162,6 +193,27 @@
 						title:'请求失败',
 						icon:'none'
 					})
+				})
+			},
+			// 跳转到购物车页面
+			goShopCart(){
+				uni.switchTab({
+					url:'../shopcart/shopcart'
+				})
+			},
+			// 加入购物车
+			addCart(){
+				let goods = this.goodsContent;
+				this.goodsContent['checked'] = false;
+				this.goodsContent['num'] = this.num;
+				// 加入购物车
+				this.addShopCart(goods);
+				// 隐藏弹出框
+				this.hidePop();
+				// 提示信息
+				uni.showToast({
+					title:"加入购物车成功",
+					icon:"none"
 				})
 			}
 		}
