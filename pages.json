@@ -147,8 +147,67 @@
         ,{
             "path" : "pages/my-path-list/my-path-list",
             "style" : {
+				"navigationBarTitleText": "地址管理",
+				"navigationBarBackgroundColor": "#FFFFFF"
+				
+			}
+        }
+        ,{
+            "path" : "pages/my-add-path/my-add-path",
+            "style" : {
 				"navigationBarBackgroundColor": "#FFFFFF",
-				"navigationBarTitleText": "地址管理"
+				"app-plus":{
+					"scrollIndicator":"none",
+					"navigationBarTitleText": "新增地址",
+					"titleNView":{
+						"buttons":[{
+							"float":"right",
+							"color":"#636263",
+							"text":"保存",
+							"fontSize":"16px",
+							"width":"60px"
+						}]
+					}
+				}
+			}
+        }
+        ,{
+            "path" : "pages/my-order/my-order",
+            "style" : {
+				"navigationBarTitleText": "我的订单",
+				"navigationBarBackgroundColor": "#FFFFFF"
+			}
+        }
+        ,{
+            "path" : "pages/confirm-order/confirm-order",
+            "style" : {
+				"navigationBarTitleText": "确认订单",
+				"navigationBarBackgroundColor": "#FFFFFF"
+			}
+        }
+        ,{
+            "path" : "pages/payment/payment",
+            "style" : {
+				"app-plus": {
+					"titleNView":false,
+					"scrollIndicator":"none"
+				}
+			}
+        }
+        ,{
+            "path" : "pages/payment-success/payment-success",
+            "style" : {
+				"navigationBarTitleText": "支付成功",
+				"navigationBarBackgroundColor": "#FFFFFF"
+			}
+        }
+        ,{
+            "path" : "pages/login/login",
+            "style" : {
+				"app-plus": {
+					"titleNView":false,
+					"scrollIndicator":"none"
+				}
 			}
         }
     ],

@@ -16,7 +16,7 @@
 		<!-- 我的订单 -->
 		<view class="order">
 			<view class="order-title">
-				<view>我的订单</view>
+				<view @tap="gomyorder">我的订单</view>
 				<view>全部订单</view>
 			</view>
 			<view class="order-list">
@@ -45,7 +45,7 @@
 		
 		<!-- 内容列表 -->
 		<view class="my-content">
-			<view class="my-content-item">
+			<view class="my-content-item" @tap="gologin">
 				<view>我的收藏</view>
 				<view>></view>
 			</view>
@@ -72,6 +72,16 @@
 			goConfig(){
 				uni.navigateTo({
 					url:'../my-config/my-config'
+				})
+			},
+			gomyorder(){
+				uni.navigateTo({
+					url:"../my-order/my-order"
+				})
+			},
+			gologin(){
+				uni.navigateTo({
+					url:"../login/login"
 				})
 			}
 		}

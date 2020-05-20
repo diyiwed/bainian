@@ -1,34 +1,75 @@
 <template>
 	<view class="my-path-list">
 		<view class="path-list">
-			<view class="path-list">
-				<view class="path-item">
+			<view 
+				v-for="(item, index) in list" 
+				:key="index"
+				@tap="toAddPath(index)">
+				<view class="path-item"
+				@tap="goConfirmOrder(item)">
 					<view class="item-main">
-						<view class="item-name">张三</view>
-						<view>18511773322</view>
+						<view class="item-name">{{item.name}}</view>
+						<view>{{item.tel}}</view>
 					</view>
 					<view class="item-main">
-						<view class="active">默认</view>
-						<view>江西省九江市彭泽县定山镇xxxx</view>
+						<view class="active" v-if="item.isDefault">默认</view>
+						<view>{{item.city}}{{item.details}}</view>
 					</view>
 				</view>
 			</view>
 		</view>
 		<view class="add-path">
-			<view class="add-path-btn">新增地址</view>
+			<view class="add-path-btn" @tap="goAddPat">新增地址</view>
 		</view>
 	</view>
 </template>
 
 <script>
+	import {mapState} from 'vuex'
 	export default {
 		data() {
 			return {
-				
+				isSelectedPath:false
+			}
+		},
+		computed:{
+			...mapState({
+				list:state=>state.path.list
+			})
+		},
+		onLoad(e) {
+			if(e.type === "selectedPath"){
+				this.isSelectedPath = true;
 			}
 		},
 		methods: {
-			
+			// 修改
+			toAddPath(index){
+					let pathObj = JSON.stringify({
+						index:index,
+						item:this.list[index]
+					})
+					uni.navigateTo({
+						url:"../my-add-path/my-add-path?data="+pathObj+""
+					})
+			},
+			// 新增
+			goAddPat(){
+				uni.navigateTo({
+					url:'../my-add-path/my-add-path'
+				})
+			},
+			// 返回确认订单页面
+			goConfirmOrder(item){
+				// 如果是从确认订单过来的执行以下下面代码
+				if(this.isSelectedPath){
+					uni.$emit("selectPathItem", item)
+					uni.navigateBack({
+						delta:1
+					})
+				}
+				
+			}
 		}
 	}
 </script>
